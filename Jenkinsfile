@@ -1,43 +1,17 @@
 pipeline {
     agent any
-
+    environment {
+        DOCKER_PATH = '/usr/bin/docker'  // Add the correct path to your Docker installation
+    }
     stages {
-        stage('Clone Repository') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Mo-anas/LLMS.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
-                echo '🔧 Building Docker image...'
-                sh 'docker build -t llms_app .'
-            }
-        }
-
-        stage('Stop Existing Container (If Running)') {
-            steps {
                 script {
-                    sh 'docker stop llms_container || true'
-                    sh 'docker rm llms_container || true'
+                    sh '''#!/bin/bash
+                    $DOCKER_PATH build -t llms_app .
+                    '''
                 }
             }
-        }
-
-        stage('Run Docker Container') {
-            steps {
-                echo '🚀 Running Docker container...'
-                sh 'docker run -d -p 5000:5000 --name llms_container llms_app'
-            }
-        }
-    }
-
-    post {
-        failure {
-            echo '❌ Pipeline failed. Please check the logs.'
-        }
-        success {
-            echo '✅ Pipeline completed successfully!'
         }
     }
 }
