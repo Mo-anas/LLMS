@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Learning Membership System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Add this for datatables if using -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-language"></i> Language Learning Center</h1>
+            <button class="menu-toggle"><i class="fas fa-bars"></i></button>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}" {% if request.endpoint == 'dashboard' %}class="active"{% endif %}><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="{{ url_for('add_member') }}" {% if request.endpoint == 'add_member' %}class="active"{% endif %}><i class="fas fa-user-plus"></i> Add Member</a></li>
+                    <li><a href="{{ url_for('view_members') }}" {% if request.endpoint == 'view_members' %}class="active"{% endif %}><i class="fas fa-users"></i> Members</a></li>
+                    <li><a href="{{ url_for('manage_languages') }}" {% if request.endpoint == 'manage_languages' %}class="active"{% endif %}><i class="fas fa-book"></i> Languages</a></li>
+                    <li><a href="{{ url_for('reports') }}" {% if request.endpoint == 'reports' %}class="active"{% endif %}><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flashes">
+                        {% for category, message in messages %}
+                            <div class="flash {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2023 Language Learning Center. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    
+    <!-- Language data for calculator -->
+    {% if languages %}
+    <script id="languagesData" type="application/json">
+        {{ languages|tojson }}
+    </script>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2><i class="fas fa-chart-bar"></i> Reports</h2>
+
+<div class="report-section">
+    <h3><i class="fas fa-book"></i> Language Popularity</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Language</th>
+                <th>Number of Enrollments</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lang in language_popularity %}
+            <tr>
+                <td>{{ lang._id }}</td>
+                <td>{{ lang.count }}</td>
+                <td>₹{{ "%.2f"|format(lang.total_revenue) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="report-section">
+    <h3><i class="fas fa-calendar-alt"></i> Monthly Revenue</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Month</th>
+                <th>Total Revenue</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for month in monthly_revenue %}
+            <tr>
+                <td>{{ month._id.month }}/{{ month._id.year }}</td>
+                <td>₹{{ "%.2f"|format(month.total) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
