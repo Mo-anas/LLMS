@@ -2,50 +2,52 @@ pipeline {
     agent any
 
     environment {
-        VENV_DIR = "venv"
+        IMAGE_NAME = "llms_app"
+        CONTAINER_NAME = "llms_container"
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/Mo-anas/LLMS.git'
+                git branch: 'main', url: 'https://github.com/Mo-anas/LLMS.git'
             }
         }
 
-        stage('Set Up Python Environment') {
+        stage('Build Docker Image') {
             steps {
-                sh 'python3 -m venv $VENV_DIR'
-                sh '. $VENV_DIR/bin/activate && pip install --upgrade pip'
-                sh '. $VENV_DIR/bin/activate && pip install -r requirements.txt'
+                script {
+                    echo "🔧 Building Docker image..."
+                    sh 'docker build -t $IMAGE_NAME .'
+                }
             }
         }
 
-        stage('Run Flask App (Optional)') {
+        stage('Stop Existing Container (If Running)') {
             steps {
-                echo 'Running Flask app for testing...'
-                sh '''
-                . $VENV_DIR/bin/activate
-                export FLASK_APP=app.py
-                flask run --host=0.0.0.0 --port=5000 &
-                sleep 5
-                '''
+                script {
+                    sh """
+                        docker ps -q --filter name=$CONTAINER_NAME | grep -q . && docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME || echo "No existing container to stop."
+                    """
+                }
             }
         }
 
-        stage('Clean Up') {
+        stage('Run Docker Container') {
             steps {
-                echo 'Cleaning up...'
-                sh 'pkill flask || true'
+                script {
+                    echo "🚀 Running the app in Docker..."
+                    sh 'docker run -d --name $CONTAINER_NAME -p 5000:5000 $IMAGE_NAME'
+                }
             }
         }
     }
 
     post {
         success {
-            echo '✅ CI pipeline completed successfully!'
+            echo "✅ Deployment successful. Your Flask app should be running on port 5000."
         }
         failure {
-            echo '❌ Pipeline failed. Please check the logs.'
+            echo "❌ Pipeline failed. Please check the logs."
         }
     }
 }
