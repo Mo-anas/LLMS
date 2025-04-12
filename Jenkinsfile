@@ -1,53 +1,43 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "llms_app"
-        CONTAINER_NAME = "llms_container"
-    }
-
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/Mo-anas/LLMS.git'
+                git 'https://github.com/Mo-anas/LLMS.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    echo "🔧 Building Docker image..."
-                    sh 'docker build -t $IMAGE_NAME .'
-                }
+                echo '🔧 Building Docker image...'
+                sh 'docker build -t llms_app .'
             }
         }
 
         stage('Stop Existing Container (If Running)') {
             steps {
                 script {
-                    sh """
-                        docker ps -q --filter name=$CONTAINER_NAME | grep -q . && docker stop $CONTAINER_NAME && docker rm $CONTAINER_NAME || echo "No existing container to stop."
-                    """
+                    sh 'docker stop llms_container || true'
+                    sh 'docker rm llms_container || true'
                 }
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                script {
-                    echo "🚀 Running the app in Docker..."
-                    sh 'docker run -d --name $CONTAINER_NAME -p 5000:5000 $IMAGE_NAME'
-                }
+                echo '🚀 Running Docker container...'
+                sh 'docker run -d -p 5000:5000 --name llms_container llms_app'
             }
         }
     }
 
     post {
-        success {
-            echo "✅ Deployment successful. Your Flask app should be running on port 5000."
-        }
         failure {
-            echo "❌ Pipeline failed. Please check the logs."
+            echo '❌ Pipeline failed. Please check the logs.'
+        }
+        success {
+            echo '✅ Pipeline completed successfully!'
         }
     }
 }
