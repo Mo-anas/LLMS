@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="member-header">
+    <h2>
+        <i class="fas fa-user"></i> Member Details: {{ member.name }} (ID: {{ member.member_id }})
+    </h2>
+    <div class="member-actions">
+        <a href="{{ url_for('add_language', member_id=member.member_id) }}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Add Language
+        </a>
+        <a href="{{ url_for('add_payment', member_id=member.member_id) }}" class="btn btn-primary">
+            <i class="fas fa-money-bill-wave"></i> Add Payment
+        </a>
+        <button class="btn btn-danger btn-delete" data-member-id="{{ member.member_id }}">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    </div>
+</div>
+
+<div class="member-details-container">
+    <div class="member-info">
+        <h3><i class="fas fa-info-circle"></i> Personal Information</h3>
+        <form method="POST" action="{{ url_for('member_details', member_id=member.member_id) }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" value="{{ member.name }}" class="form-control" required>
+                    <div class="invalid-feedback">Please enter member name</div>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ member.email }}" class="form-control" required>
+                    <div class="invalid-feedback">Please enter valid email</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" value="{{ member.phone }}" class="form-control" required>
+                    <div class="invalid-feedback">Please enter phone number</div>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" value="{{ member.dob.strftime('%Y-%m-%d') }}" class="form-control" required>
+                    <div class="invalid-feedback">Please select date of birth</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="3" class="form-control" required>{{ member.address }}</textarea>
+                <div class="invalid-feedback">Please enter address</div>
+            </div>
+
+            <div class="form-group">
+                <label>Membership Start Date</label>
+                <p class="form-control-static">{{ member.start_date.strftime('%Y-%m-%d') }}</p>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Update Details
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="member-languages">
+        <h3><i class="fas fa-book"></i> Enrolled Languages</h3>
+        {% if member.languages %}
+        <div class="table-responsive">
+            <table class="table-languages">
+                <thead>
+                    <tr>
+                        <th>Language</th>
+                        <th>Level</th>
+                        <th>Duration</th>
+                        <th>Start Date</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for language in member.languages %}
+                    <tr>
+                        <td>{{ language.name }}</td>
+                        <td>{{ language.level }}</td>
+                        <td>{{ language.duration }} months</td>
+                        <td>{{ language.start_date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ formatCurrency(language.amount) }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger btn-delete-language" 
+                                    data-language-id="{{ language.language_id }}"
+                                    data-member-id="{{ member.member_id }}">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="no-data">No languages enrolled yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="member-payments">
+        <h3><i class="fas fa-money-bill-wave"></i> Payment History</h3>
+        {% if member.payments %}
+        <div class="table-responsive">
+            <table class="table-payments">
+                <thead>
+                    <tr>
+                        <th>Payment ID</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Method</th>
+                        <th>For Language</th>
+                        <th>Receipt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in member.payments %}
+                    <tr>
+                        <td>{{ payment.payment_id }}</td>
+                        <td>{{ formatCurrency(payment.amount) }}</td>
+                        <td>{{ payment.date.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ payment.method }}</td>
+                        <td>
+                            {% if payment.for_language %}
+                                {% for lang in member.languages if lang.language_id == payment.for_language %}
+                                    {{ lang.name }}
+                                {% endfor %}
+                            {% else %}
+                                Membership
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-info btn-print-receipt" 
+                                    data-payment-id="{{ payment.payment_id }}">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="no-data">No payment history yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal" id="deleteModal">
+    <div class="modal-content">
+        <h3>Confirm Deletion</h3>
+        <p>Are you sure you want to delete this item? This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button class="btn btn-secondary btn-cancel">Cancel</button>
+            <button class="btn btn-danger btn-confirm">Delete</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

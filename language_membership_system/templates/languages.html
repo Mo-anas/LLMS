@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2><i class="fas fa-book"></i> Available Languages</h2>
+
+<h3 class="language-category"><i class="fas fa-flag"></i> Indian Languages</h3>
+<table class="language-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Language</th>
+            <th>Levels Available</th>
+            <th>Durations (months)</th>
+            <th>Base Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for language in languages if language.language_id <= 109 %}
+        <tr>
+            <td>{{ language.language_id }}</td>
+            <td>{{ language.name }}</td>
+            <td>{{ language.levels|join(', ') }}</td>
+            <td>{{ language.durations|join(', ') }}</td>
+            <td>{{ formatCurrency(language.base_price) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3 class="language-category"><i class="fas fa-globe"></i> International Languages</h3>
+<table class="language-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Language</th>
+            <th>Levels Available</th>
+            <th>Durations (months)</th>
+            <th>Base Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for language in languages if language.language_id > 109 %}
+        <tr>
+            <td>{{ language.language_id }}</td>
+            <td>{{ language.name }}</td>
+            <td>{{ language.levels|join(', ') }}</td>
+            <td>{{ language.durations|join(', ') }}</td>
+            <td>{{ formatCurrency(language.base_price) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
