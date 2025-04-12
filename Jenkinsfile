@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/Mo-anas/LLMS.git'
+                git branch: 'main', url: 'https://github.com/Mo-anas/LLMS.git'
             }
         }
 
