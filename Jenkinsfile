@@ -158,5 +158,11 @@ pipeline {
             //            subject: "Pipeline Failed: ${env.JOB_NAME}",
             //            to: 'team@example.com'
         }
+        pipeline {
+    agent {
+        label 'docker-agent' // Use your agent label here
+    }
+    // rest of your pipeline
+}
     }
 }
