@@ -1,3 +1,5 @@
+[file name]: view_members.html
+[file content begin]
 {% extends "base.html" %}
 
 {% block content %}
@@ -47,10 +49,26 @@
                     <a href="{{ url_for('add_payment', member_id=member.member_id) }}" class="btn btn-sm btn-success">
                         <i class="fas fa-money-bill-wave"></i> Payment
                     </a>
+                    <button class="btn btn-sm btn-danger btn-delete-member" data-member-id="{{ member.member_id }}">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal" id="deleteMemberModal">
+    <div class="modal-content">
+        <h3>Confirm Member Deletion</h3>
+        <p>Are you sure you want to delete this member? This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button class="btn btn-secondary btn-cancel">Cancel</button>
+            <button class="btn btn-danger btn-confirm">Delete</button>
+        </div>
+    </div>
+</div>
 {% endblock %}
+[file content end]
