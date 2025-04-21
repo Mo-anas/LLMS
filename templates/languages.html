@@ -1,3 +1,5 @@
+[file name]: languages.html
+[file content begin]
 {% extends "base.html" %}
 
 {% block content %}
@@ -11,7 +13,7 @@
             <th>Language</th>
             <th>Levels Available</th>
             <th>Durations (months)</th>
-            <th>Base Price</th>
+            <th>Base Price (₹)</th>
         </tr>
     </thead>
     <tbody>
@@ -35,7 +37,7 @@
             <th>Language</th>
             <th>Levels Available</th>
             <th>Durations (months)</th>
-            <th>Base Price</th>
+            <th>Base Price (₹)</th>
         </tr>
     </thead>
     <tbody>
@@ -50,4 +52,29 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Sample data that should come from your backend -->
+<script id="languagesData" type="application/json">
+    [
+        {"language_id": 101, "name": "Hindi", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1000},
+        {"language_id": 102, "name": "Bengali", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1000},
+        {"language_id": 103, "name": "Tamil", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1000},
+        {"language_id": 104, "name": "Telugu", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1000},
+        {"language_id": 105, "name": "Marathi", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1000},
+        {"language_id": 106, "name": "Gujarati", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1000},
+        {"language_id": 107, "name": "Malayalam", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1000},
+        {"language_id": 108, "name": "Kannada", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1000},
+        {"language_id": 109, "name": "Punjabi", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1000},
+        {"language_id": 201, "name": "English", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1500},
+        {"language_id": 202, "name": "Spanish", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1500},
+        {"language_id": 203, "name": "French", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1500},
+        {"language_id": 204, "name": "German", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1500},
+        {"language_id": 205, "name": "Japanese", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 2000},
+        {"language_id": 206, "name": "Chinese", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 2000},
+        {"language_id": 207, "name": "Russian", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1500},
+        {"language_id": 208, "name": "Arabic", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1500},
+        {"language_id": 209, "name": "Portuguese", "levels": ["Beginner", "Intermediate", "Advanced"], "durations": [3, 6, 9], "base_price": 1500}
+    ]
+</script>
 {% endblock %}
+[file content end]
