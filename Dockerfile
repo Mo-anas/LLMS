@@ -1,20 +1,17 @@
-# Use official Python image
-FROM python:3.10-slim
+# Use a more secure Python runtime as a parent image
+FROM python:3.11-slim-bookworm
 
-# Set working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy dependencies file
-COPY requirements.txt .
+# Copy the current directory contents into the container
+COPY . /app
 
-# Install dependencies
+# Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the app files
-COPY . .
-
-# Expose the port the app runs on
+# Expose port 5000 for the Flask app
 EXPOSE 5000
 
-# Run the Flask app
+# Command to run the Flask app
 CMD ["python", "app.py"]
