@@ -1,24 +1,42 @@
+[file name]: reports.html
+[file content begin]
 {% extends "base.html" %}
 
 {% block content %}
 <h2><i class="fas fa-chart-bar"></i> Reports</h2>
 
 <div class="report-section">
-    <h3><i class="fas fa-book"></i> Language Popularity</h3>
-    <table>
+    <h3><i class="fas fa-book"></i> Language Enrollments</h3>
+    <table class="report-table">
         <thead>
             <tr>
+                <th>Member ID</th>
+                <th>Member Name</th>
                 <th>Language</th>
-                <th>Number of Enrollments</th>
-                <th>Total Revenue</th>
+                <th>Level</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Amount</th>
+                <th>Payment Status</th>
             </tr>
         </thead>
         <tbody>
-            {% for lang in language_popularity %}
+            {% for enrollment in enrollments %}
             <tr>
-                <td>{{ lang._id }}</td>
-                <td>{{ lang.count }}</td>
-                <td>₹{{ "%.2f"|format(lang.total_revenue) }}</td>
+                <td>{{ enrollment.member_id }}</td>
+                <td>{{ enrollment.member_name }}</td>
+                <td>{{ enrollment.language_name }}</td>
+                <td>{{ enrollment.level }}</td>
+                <td>{{ enrollment.start_date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ enrollment.end_date.strftime('%Y-%m-%d') }}</td>
+                <td>{{ formatCurrency(enrollment.amount) }}</td>
+                <td>
+                    {% if enrollment.payment_status == 'Paid' %}
+                        <span class="badge badge-success">{{ enrollment.payment_status }}</span>
+                    {% else %}
+                        <span class="badge badge-danger">{{ enrollment.payment_status }}</span>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -26,22 +44,45 @@
 </div>
 
 <div class="report-section">
+    <h3><i class="fas fa-money-bill-wave"></i> Revenue Summary</h3>
+    <div class="revenue-cards">
+        <div class="revenue-card total-revenue">
+            <h4>Total Revenue</h4>
+            <p>{{ formatCurrency(total_revenue) }}</p>
+        </div>
+        <div class="revenue-card paid-revenue">
+            <h4>Received Payments</h4>
+            <p>{{ formatCurrency(paid_revenue) }}</p>
+        </div>
+        <div class="revenue-card pending-revenue">
+            <h4>Pending Payments</h4>
+            <p>{{ formatCurrency(pending_revenue) }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="report-section">
     <h3><i class="fas fa-calendar-alt"></i> Monthly Revenue</h3>
-    <table>
+    <table class="report-table">
         <thead>
             <tr>
                 <th>Month</th>
                 <th>Total Revenue</th>
+                <th>Received</th>
+                <th>Pending</th>
             </tr>
         </thead>
         <tbody>
             {% for month in monthly_revenue %}
             <tr>
                 <td>{{ month._id.month }}/{{ month._id.year }}</td>
-                <td>₹{{ "%.2f"|format(month.total) }}</td>
+                <td>{{ formatCurrency(month.total) }}</td>
+                <td>{{ formatCurrency(month.paid) }}</td>
+                <td>{{ formatCurrency(month.pending) }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 {% endblock %}
+[file content end]
