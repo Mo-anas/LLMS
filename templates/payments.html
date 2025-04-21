@@ -1,3 +1,5 @@
+[file name]: payments.html
+[file content begin]
 {% extends "base.html" %}
 
 {% block content %}
@@ -15,9 +17,7 @@
             <select id="method" name="method" class="form-control" required>
                 <option value="">-- Select Method --</option>
                 <option value="Cash">Cash</option>
-                <option value="Credit Card">Credit Card</option>
-                <option value="Debit Card">Debit Card</option>
-                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Online Transfer">Online Transfer</option>
                 <option value="UPI">UPI</option>
             </select>
             <div class="invalid-feedback">Please select payment method</div>
@@ -57,4 +57,26 @@
         </a>
     </div>
 </form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const languageSelect = document.getElementById('language_id');
+    const amountInput = document.getElementById('amount');
+    
+    // Set today's date as default
+    document.getElementById('date').valueAsDate = new Date();
+    
+    // Auto-fill amount when language is selected
+    languageSelect.addEventListener('change', function() {
+        if (this.value) {
+            const selectedOption = this.options[this.selectedIndex];
+            const languageAmount = parseFloat(selectedOption.getAttribute('data-amount'));
+            if (!isNaN(languageAmount)) {
+                amountInput.value = languageAmount.toFixed(2);
+            }
+        }
+    });
+});
+</script>
 {% endblock %}
+[file content end]
