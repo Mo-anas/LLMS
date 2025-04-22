@@ -51,8 +51,8 @@ pipeline {
                     // Optional: login to DockerHub
                     // sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_REGISTRY} --password-stdin"
 
-                    sh "docker tag ${IMAGE_NAME} ${DOCKER_REGISTRY}/${IMAGE_NAME}"
-                    sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}"
+                   // sh "docker tag ${IMAGE_NAME} ${DOCKER_REGISTRY}/${IMAGE_NAME}"
+                    // sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}"
                 }
             }
         }
