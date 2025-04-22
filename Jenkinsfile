@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "language-membership-system"
         CONTAINER_NAME = "language-membership-system-container"
-        DOCKER_REGISTRY = "moanas" // Change this to your actual DockerHub username
+        DOCKER_REGISTRY = "moanas" // Your actual Docker Hub username
     }
 
     stages {
@@ -31,7 +31,7 @@ pipeline {
                     // Run container with port mapping
                     sh "docker run -d -p 5000:5000 --name ${CONTAINER_NAME} ${IMAGE_NAME}"
 
-                    // Wait for app to start (optional: add health check in Dockerfile)
+                    // Wait for app to start
                     sh "sleep 5"
 
                     // Test endpoint
@@ -48,9 +48,12 @@ pipeline {
             steps {
                 echo '🚀 Pushing Docker image to registry...'
                 script {
-                    // Optional: login to DockerHub
-                    // sh "echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_REGISTRY} --password-stdin"
+                    // Use Jenkins credentials for DockerHub login
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                    }
 
+                    // Tag and push image
                     sh "docker tag ${IMAGE_NAME} ${DOCKER_REGISTRY}/${IMAGE_NAME}"
                     sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}"
                 }
